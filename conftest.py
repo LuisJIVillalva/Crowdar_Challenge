@@ -5,8 +5,6 @@ from datetime import datetime
 
 SCREENSHOTS_DIR = os.path.join(os.path.dirname(__file__), "reports", "screenshots")
 
-# Registro global: los tests que manejen su propio driver pueden registrarlo acá
-# para que el hook de captura lo encuentre al fallar
 _active_drivers = {}
 
 
@@ -51,7 +49,6 @@ def pytest_runtest_makereport(item, call):
     report = outcome.get_result()
 
     if report.when == "call" and report.failed:
-        # Busca el driver: primero en el fixture, luego en el registro global
         driver = item.funcargs.get("browser") or _active_drivers.get(item.name)
 
         if driver:
@@ -80,8 +77,6 @@ def pytest_runtest_makereport(item, call):
             except Exception as e:
                 print(f"\n⚠️  No se pudo tomar screenshot: {e}")
             finally:
-                # Si el driver vino del registro global (test con driver propio),
-                # el hook lo cierra para que el test no lo haga antes de la captura
                 if item.name in _active_drivers:
                     try:
                         driver.quit()
