@@ -12,6 +12,7 @@ from conftest import register_driver, unregister_driver
 from core.logging_local import log
 from locators.home_locators import BUGER_MENU
 from locators.login_locators import INPUT_USERNAME, INPUT_PASSWORD, BUTTON_LOGIN
+from utils.web_utils import post_case_execution_web
 
 
 class TestData:
@@ -48,10 +49,7 @@ def test_login():
         WebDriverWait(TestData.wd, 10).until(
             ec.element_to_be_clickable(resolve_locator(BUGER_MENU)))
 
+        post_case_execution_web(TestData.wd, True, TestData.case_name)
     except BaseException as err:
+        post_case_execution_web(TestData.wd, False, TestData.case_name)
         raise Exception("Hubo un error - {}".format(str(err).replace('\n', ' ')))
-    finally:
-        if sys.exc_info()[0] is None:
-            unregister_driver(TestData.case_name)
-            if TestData.wd:
-                TestData.wd.quit()

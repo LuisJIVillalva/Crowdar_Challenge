@@ -1,33 +1,25 @@
-from datetime import datetime
+import logging
 
-class log():
-    color_end = '\033[0m'
+_logger = logging.getLogger("automation")
+
+
+class log:
     @staticmethod
     def info(message):
-        color_ini = '\033[32m'
-        date = datetime.now().strftime("%H:%M:%S")
-        print(f"{color_ini}{date} - INFO - {message}", log.color_end)
+        _logger.info(message)
 
     @staticmethod
     def test(message):
-        color_ini = '\033[37m'
-        date = datetime.now().strftime("%H:%M:%S")
-        print(f"{color_ini}{date} - TEST - {message}", log.color_end)
+        _logger.info(f"[TEST] {message}")
 
     @staticmethod
     def config(message):
-        color_ini = '\033[32m'
-        date = datetime.now().strftime("%H:%M:%S")
-        print(f"{color_ini}{date} - CONFIG - {message}", log.color_end)
+        _logger.info(f"[CONFIG] {message}")
 
     @staticmethod
     def warning(message):
-        color_ini = '\033[93m'
-        date = datetime.now().strftime("%H:%M:%S")
-        print(f"{color_ini}{date} - WARNING - {message}", log.color_end)
+        _logger.warning(message)
 
     @staticmethod
     def error(message):
-        color_ini = '\033[31m'
-        date = datetime.now().strftime("%H:%M:%S")
-        print(f"{color_ini}{date} - ERROR - {message}", log.color_end)
+        _logger.error(message)

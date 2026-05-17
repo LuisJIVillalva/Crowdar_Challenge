@@ -30,12 +30,6 @@ def pytest_configure(config):
 
 @pytest.fixture()
 def browser(request):
-    """
-    Fixture que crea y cierra el driver automáticamente.
-    Úsalo en tests que no manejen su propio driver:
-        def test_algo(browser):
-            browser.get("https://...")
-    """
     from core.browser import get_driver
     name = request.config.getoption("--browser")
     driver = get_driver(name)
@@ -45,42 +39,60 @@ def browser(request):
 
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
+    pytest_html = item.config.pluginmanager.getplugin("html")
     outcome = yield
     report = outcome.get_result()
+    extra = getattr(report, "extra", [])
 
     if report.when == "call" and report.failed:
-        driver = item.funcargs.get("browser") or _active_drivers.get(item.name)
+        driver = item.funcargs.get("browser")
+        matched_key = None
+
+        if not driver:
+            if item.name in _active_drivers:
+                matched_key = item.name
+                driver = _active_drivers[matched_key]
+
+        if not driver:
+            for key in _active_drivers:
+                if item.name.startswith(key):
+                    matched_key = key
+                    driver = _active_drivers[key]
+                    break
 
         if driver:
             try:
                 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                filename = f"{item.name}_{timestamp}.png"
+                safe_name = item.name.replace("[", "_").replace("]", "").replace(":", "_").replace("/", "_").replace("\\", "_")
+                filename = f"{safe_name}_{timestamp}.png"
                 path = os.path.join(SCREENSHOTS_DIR, filename)
                 driver.save_screenshot(path)
+                print(f"[DEBUG] Screenshot guardado: {path}")
 
-                try:
-                    from pytest_html import extras
+                if pytest_html:
+                    from pytest_html import extras as html_extras
                     with open(path, "rb") as f:
                         encoded = base64.b64encode(f.read()).decode("utf-8")
-                    report.extra = getattr(report, "extra", [])
-                    report.extra.append(extras.html(
+                    img_src = f"data:image/png;base64,{encoded}"
+                    extra.append(html_extras.html(
                         f'<div style="margin-top:10px">'
                         f'<p><b>📸 Screenshot al momento del fallo:</b></p>'
-                        f'<img src="data:image/png;base64,{encoded}" '
-                        f'style="max-width:50%;border:1px solid #ccc;border-radius:4px"/>'
+                        f'<img src="{img_src}" style="max-width:800px;width:100%;border:1px solid #ccc;border-radius:4px"/>'
                         f'</div>'
                     ))
-                except Exception:
-                    pass
+                    report.extra = extra
+                    print(f"[DEBUG] Extra agregado al reporte: {len(report.extra)} extras")
 
-                print(f"\n📸 Screenshot guardado: {path}")
             except Exception as e:
-                print(f"\n⚠️  No se pudo tomar screenshot: {e}")
+                print(f"\n⚠️  Error en screenshot: {e}")
+                import traceback
+                traceback.print_exc()
             finally:
-                if item.name in _active_drivers:
+                if matched_key and matched_key in _active_drivers:
                     try:
                         driver.quit()
                     except Exception:
                         pass
-                    _active_drivers.pop(item.name, None)
-
+                    _active_drivers.pop(matched_key, None)
+        else:
+            print(f"[DEBUG] ⚠️ No se encontró driver para tomar screenshot")

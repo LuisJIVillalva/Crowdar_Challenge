@@ -11,6 +11,7 @@ from core.locator_utils import resolve_locator
 from conftest import register_driver, unregister_driver
 from core.logging_local import log
 from locators.login_locators import INPUT_USERNAME, INPUT_PASSWORD, BUTTON_LOGIN, ERROR_MESSAGE
+from utils.web_utils import post_case_execution_web
 
 
 class TestData:
@@ -32,12 +33,19 @@ class TestData:
 
 @pytest.mark.login
 @pytest.mark.parametrize(("case_name", "user", "password", "expected_error"),
+
                          (("Usuario bloqueado", TestData.username, TestData.password, TestData.error_locked_out_user),
+
                          ("Contraseña incorrecta", TestData.username, "pass_incorrect", TestData.error_password_incorrect),
+
                          ("Usuario incorrecto", "user_incorrect", TestData.password, TestData.error_password_incorrect),
+
                          ("No se ingresa contraseña", TestData.username, "",TestData.error_password_required),
+
                          ("No se ingresa usuario", "", TestData.password, TestData.error_user_required),
+
                          ("No se ingresa usuario ni contraseña","", "", TestData.error_user_required)),
+
                          ids=["1:usuario_bloqueado",
                               "2:contrasenia_incorrecta",
                               "3:usuario_incorrecto",
@@ -66,10 +74,7 @@ def test_login_negative(case_name, user, password, expected_error):
         WebDriverWait(TestData.wd, 10).until(
             ec.text_to_be_present_in_element(resolve_locator(ERROR_MESSAGE), expected_error))
 
+        post_case_execution_web(TestData.wd, True, TestData.case_name)
     except BaseException as err:
+        post_case_execution_web(TestData.wd, False, TestData.case_name)
         raise Exception("Hubo un error - {}".format(str(err).replace('\n', ' ')))
-    finally:
-        if sys.exc_info()[0] is None:
-            unregister_driver(TestData.case_name)
-            if TestData.wd:
-                TestData.wd.quit()

@@ -1,0 +1,6 @@
+SUBTOTAL_LABEL = "XPATH:(//*[@data-test='subtotal-label'])"
+TAX_LABEL = "XPATH:(//*[@data-test='tax-label'])"
+TOTAL_LABEL = "XPATH:(//*[@data-test='total-label'])"
+BUTTON_FINISH = "ID:finish"
+FINISH_LABEL = "XPATH:(//*[@data-test='complete-header'])"
+BUTTON_BACK_HOME = "ID:back-to-products"

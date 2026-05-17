@@ -1,1 +1,8 @@
 BUGER_MENU = "ID:react-burger-menu-btn"
+ITEMS_CONTAINER = "XPATH://*[@data-test='inventory-item']"
+ITEM_NAME = "XPATH:(//*[@data-test='inventory-item-name'])[{}]"
+ITEM_PRICE = "XPATH:(//*[@data-test='inventory-item-price'])[{}]"
+BUTTON_ADD_TO_CART = "XPATH://*[contains(@data-test, 'add-to-cart')]"
+BUTTON_SHOPPING_CART = "XPATH://*[@data-test='shopping-cart-link']"
+BUTTON_REMOVE = "XPATH://*[contains(@data-test, 'remove')]"
+COUNT_CART_ITEM = "XPATH://*[@data-test='shopping-cart-badge']"
