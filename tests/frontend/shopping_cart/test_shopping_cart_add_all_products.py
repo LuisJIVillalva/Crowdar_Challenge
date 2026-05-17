@@ -28,7 +28,7 @@ class TestData:
 def setup_class(user, password):
     try:
         TestData.wd = login(user, password)
-        register_driver("test_add_all_products_and_checkout", TestData.wd)
+        register_driver(TestData.case_name, TestData.wd)
         return False
 
     except BaseException as err:
@@ -43,7 +43,7 @@ def setup_class(user, password):
                          ids=["1:usuario_1",
                               "2:usuario_2"
                               ])
-def test_add_all_products_and_checkout(user, password):
+def test_shopping_cart_add_all_products(user, password):
     """
     El objetivo de este test es agregar todos los productos al carrito y finalizar la compra.
     """
@@ -95,6 +95,8 @@ def test_add_all_products_and_checkout(user, password):
 
             assert name not in validate_items, f"El producto {name} se encuentra repetido en el carrito"
             validate_items.append(name)
+
+        #------------ El caso de prueba definido en el feature finalizaría acá, se continúa con la automatización hasta finalizar la compra ------------
 
         log.info("Click en el botón checkout")
         WebDriverWait(TestData.wd, 10).until(ec.presence_of_element_located(resolve_locator(shopping_cart_locators.BUTTON_CHECKOUT))).click()

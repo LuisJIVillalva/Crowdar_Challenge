@@ -67,7 +67,6 @@ def pytest_runtest_makereport(item, call):
                 filename = f"{safe_name}_{timestamp}.png"
                 path = os.path.join(SCREENSHOTS_DIR, filename)
                 driver.save_screenshot(path)
-                print(f"[DEBUG] Screenshot guardado: {path}")
 
                 if pytest_html:
                     from pytest_html import extras as html_extras
@@ -80,8 +79,7 @@ def pytest_runtest_makereport(item, call):
                         f'<img src="{img_src}" style="max-width:800px;width:100%;border:1px solid #ccc;border-radius:4px"/>'
                         f'</div>'
                     ))
-                    report.extra = extra
-                    print(f"[DEBUG] Extra agregado al reporte: {len(report.extra)} extras")
+                    report.extras = extra
 
             except Exception as e:
                 print(f"\n⚠️  Error en screenshot: {e}")
@@ -94,5 +92,3 @@ def pytest_runtest_makereport(item, call):
                     except Exception:
                         pass
                     _active_drivers.pop(matched_key, None)
-        else:
-            print(f"[DEBUG] ⚠️ No se encontró driver para tomar screenshot")

@@ -36,6 +36,7 @@ def get_driver(url: str, browser: str = "chrome", headless: bool = False):
         driver = selenium_webdriver.Chrome(options=options)
 
     driver.maximize_window()
+    driver.implicitly_wait(0)
 
     try:
         driver.get(url)
