@@ -50,71 +50,70 @@ python --version
 
 ---
 
-## Instalación manual
+## Instalación
 
-### 1. Clonar el repositorio
-```bash
+### Opción A — Automática (recomendada)
+
+El proyecto incluye dos scripts `.bat` para CMD que automatizan la configuración:
+
+**Primera vez** (instala todo y deja la consola lista):
+```cmd
+configure_tool.bat
+```
+
+**Consolas siguientes** (activa el entorno y configura las variables):
+```cmd
+configure_env.bat
+```
+
+Al terminar ambos scripts, la consola queda con `(crowdar_env)` activo y las variables configuradas, lista para ejecutar `pytest`.
+
+---
+
+### Opción B — Manual (si los scripts fallan)
+
+> Los siguientes comandos están escritos para **CMD (Símbolo del sistema)**.  
+> Si usás **PowerShell**, cambiá `.\crowdar_env\Scripts\activate.bat` por `.\crowdar_env\Scripts\Activate.ps1`  
+> y `set BIZ_AUTOMATION_ENV=...` por `$env:BIZ_AUTOMATION_ENV = "..."`.
+
+#### 1. Clonar el repositorio
+```cmd
 git clone <URL_DEL_REPOSITORIO>
 cd PythonProject
 ```
 
-### 2. Crear el entorno virtual
-
-**Windows (PowerShell):**
-```powershell
-python -m venv crowdar_env
+#### 2. Instalar virtualenv
+```cmd
+pip install virtualenv
 ```
 
-### 3. Activar el entorno virtual
-
-**Windows (PowerShell):**
-```powershell
-.\crowdar_env\Scripts\Activate.ps1
+#### 3. Crear el entorno virtual
+```cmd
+virtualenv -p "C:\RutaDePython\python.exe" crowdar_env
 ```
+> ⚠️ Reemplazá `C:\RutaDePython\python.exe` por la ruta real donde instalaste Python.  
+> Para encontrarla ejecutá: `where python`
 
-> Si PowerShell bloquea la ejecución de scripts, ejecutá primero:
-> ```powershell
-> Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-> ```
-
-**Windows (CMD):**
+#### 4. Activar el entorno virtual
 ```cmd
 .\crowdar_env\Scripts\activate.bat
 ```
-
 Una vez activo, el prompt muestra `(crowdar_env)` al inicio.
 
-### 4. Actualizar pip e instalar dependencias
-```bash
+#### 5. Actualizar pip e instalar dependencias
+```cmd
 python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-### 5. Configurar variable de entorno
-
-**Windows (PowerShell):**
-```powershell
-$env:BIZ_AUTOMATION_ENV = "config/config_sit.ini"
-```
-
-**Windows (CMD):**
+#### 6. Configurar variable de entorno
 ```cmd
 set BIZ_AUTOMATION_ENV=config/config_sit.ini
 ```
 
-> ⚠️ **Importante:** los pasos 3 y 5 deben repetirse **cada vez que se abre una consola nueva**.  
-> El entorno virtual y las variables de entorno no persisten entre sesiones de terminal.  
-> Secuencia rápida para cada nueva consola:
-> ```powershell
-> # PowerShell
-> .\crowdar_env\Scripts\Activate.ps1
-> $env:BIZ_AUTOMATION_ENV = "config/config_sit.ini"
-> ```
-> ```cmd
-> :: CMD
-> .\crowdar_env\Scripts\activate.bat
-> set BIZ_AUTOMATION_ENV=config/config_sit.ini
-> ```
+> ⚠️ **Los pasos 4 y 6 deben repetirse cada vez que se abre una consola nueva.**  
+> El entorno virtual y las variables no persisten entre sesiones.  
+> O simplemente ejecutá `configure_env.bat` para hacerlo automáticamente.
 
 ---
 
@@ -134,6 +133,35 @@ host = https://www.mercadolibre.com.ar/
 
 Para correr en **Firefox** cambiá `browser = firefox`.  
 Para correr **sin ventana** (CI/CD) cambiá `headless = true`.
+
+### Múltiples ambientes
+
+El proyecto soporta distintos archivos de configuración por ambiente. Ya incluye:
+
+```
+config/
+├── config_sit.ini   ← SIT (por defecto)
+└── config_uat.ini   ← UAT
+```
+
+Para cambiar de ambiente tenés dos opciones:
+
+**Opción 1 — Editar `configure_env.bat`** (una sola vez):
+```bat
+:: Cambiá esta línea por el archivo del ambiente deseado
+set BIZ_AUTOMATION_ENV=config/config_uat.ini
+```
+
+**Opción 2 — Ejecutar manualmente en CMD**:
+```cmd
+:: SIT
+set BIZ_AUTOMATION_ENV=config/config_sit.ini
+
+:: UAT
+set BIZ_AUTOMATION_ENV=config/config_uat.ini
+```
+
+> Para agregar un nuevo ambiente simplemente creá un nuevo archivo `config/config_<nombre>.ini` siguiendo la misma estructura y apuntá la variable a ese archivo.
 
 ---
 
