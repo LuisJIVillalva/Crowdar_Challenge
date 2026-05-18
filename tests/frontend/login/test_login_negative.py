@@ -31,7 +31,6 @@ class TestData:
     wd = None
 
 
-@pytest.mark.login
 @pytest.mark.parametrize(("case_name", "user", "password", "expected_error"),
 
                          (("Usuario bloqueado", TestData.username, TestData.password, TestData.error_locked_out_user),

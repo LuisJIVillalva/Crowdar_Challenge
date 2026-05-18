@@ -41,7 +41,7 @@ class TestData:
                           (TestData.problem_user, TestData.problem_user_password),
                           (TestData.performance_glitch_user, TestData.performance_glitch_user_pass),
                           (TestData.error_user, TestData.error_user_pass)),
-                         ids=["1:usuario_standar",
+                         ids=["1:usuario_standard",
                               "2:usuario_con_problemas",
                               "3:usuario_lento",
                               "4:usuario_error"

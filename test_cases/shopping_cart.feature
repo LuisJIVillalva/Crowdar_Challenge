@@ -65,7 +65,7 @@
     Given que el usuario ingresa a : www.saucedemo.com
     And inicia sesión con el usuario "<usuario>" y la contraseña "secret_sauce"
     And ingresa al detalle de un producto
-    When agrega el producto al carrito desde la pagina de detalle
+    When agrega el producto al carrito desde la página de detalle
     Then el ícono del carrito muestra "1" producto
     And el producto agregado aparece en el carrito
 
@@ -75,7 +75,7 @@
       | performance_glitch_user |
 
   @detalle @happy_path
-  Scenario Outline: Agregar producto desde el inventario y removerlo desde la pagina de detalle
+  Scenario Outline: Agregar producto desde el inventario y removerlo desde la página de detalle
     Given que el usuario ingresa a : www.saucedemo.com
     And inicia sesión con el usuario "<usuario>" y la contraseña "secret_sauce"
     And agrega un producto al carrito

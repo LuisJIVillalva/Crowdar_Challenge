@@ -54,7 +54,7 @@ def test_shopping_cart_add_all_products(user, password):
         log.info("Obteniendo todos los productos.")
         items = WebDriverWait(TestData.wd, 10).until(ec.presence_of_all_elements_located(resolve_locator(home_locators.ITEMS_CONTAINER)))
         items_data = {}
-        log.info("Validando que el carrito esté vacio")
+        log.info("Validando que el carrito esté vacío")
         WebDriverWait(TestData.wd, 10).until(ec.invisibility_of_element(resolve_locator(home_locators.COUNT_CART_ITEM)))
 
         for i, item in enumerate(items, start=1):
@@ -105,7 +105,7 @@ def test_shopping_cart_add_all_products(user, password):
         log.info("Ingresando nombre")
         WebDriverWait(TestData.wd, 10).until(
             ec.presence_of_element_located(resolve_locator(user_information_locators.INPUT_NAME))).send_keys("Luis Juan Ignacio")
-        log.info("Ingresando nombre")
+        log.info("Ingresando apellido")
         WebDriverWait(TestData.wd, 10).until(
             ec.presence_of_element_located(resolve_locator(user_information_locators.INPUT_LAST_NAME))).send_keys("Villalva")
         log.info("Ingresando código postal")
@@ -136,7 +136,7 @@ def test_shopping_cart_add_all_products(user, password):
         log.info("Validando que se muestre el mensaje de compra finalizada")
         WebDriverWait(TestData.wd, 10).until(ec.text_to_be_present_in_element(resolve_locator(checkout_locators.FINISH_LABEL), "Thank you for your order!"))
 
-        log.info("Validando que el carrito esté vacio")
+        log.info("Validando que el carrito esté vacío")
         WebDriverWait(TestData.wd, 10).until(ec.invisibility_of_element(resolve_locator(home_locators.COUNT_CART_ITEM)))
 
         log.info("Volviendo a la home")
