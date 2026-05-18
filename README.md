@@ -78,8 +78,8 @@ Al terminar ambos scripts, la consola queda con `(crowdar_env)` activo y las var
 
 #### 1. Clonar el repositorio
 ```cmd
-git clone <URL_DEL_REPOSITORIO>
-cd PythonProject
+git clone https://github.com/LuisJIVillalva/Crowdar_Challenge.git
+cd Crowdar_Challenge
 ```
 
 #### 2. Instalar virtualenv
